@@ -1,31 +1,21 @@
 module.exports = {
-  'Netflix IR Website Test': function (browser) {
+  'Netflix IR Website': function (browser) {
     browser
-      .url('https://ir.netflix.net/')
-      .waitForElementVisible('body', 1000)
-      .assert.title('Netflix Investor Relations')
-      .assert.containsText('div.container > h1', 'Investor Relations')
-      .click('a[href="/investors"]')
-      .waitForElementVisible('div.container > h2', 1000)
-      .assert.containsText('div.container > h2', 'Investor Relations')
-      .click('a[href="/sec-filings"]')
-      .waitForElementVisible('div.container > h2', 1000)
-      .assert.containsText('div.container > h2', 'SEC Filings')
-      .click('a[href="/sec-filings/Form-10K-for-the-year-ended-December-31-2020"]')
-      .waitForElementVisible('div.container > h2', 1000)
-      .assert.containsText('div.container > h2', 'Form 10-K for the year ended December 31, 2020')
-      .click('a[href="/stock-information"]')
-      .waitForElementVisible('div.container > h2', 1000)
-      .assert.containsText('div.container > h2', 'Stock Information')
-      .click('a[href="/about"]')
-      .waitForElementVisible('div.container > h2', 1000)
-      .assert.containsText('div.container > h2', 'About Netflix')
-      .click('a[href="/login"]')
-      .setValue('input[name=email]', 'test@example.com')
-      .setValue('input[name=password]', 'testpassword')
-      .click('input[type="submit"]')
-      .waitForElementVisible('div.container > h2', 1000)
-      .assert.containsText('div.container > h2', 'My Profile')
+      .url('https://ir.netflix.net/')  //Navigate to the Netflix IR website
+      .assert.urlEquals('https://ir.netflix.net/') //Verify that the website's homepage is displayed
+      .assert.visible('a[href="/events"]') //Verify that you can select the news and events in the navigation bar
+      .click('a[href="/events"]') //Click on the news and events tab
+      .waitForElementVisible('input[name="username"]') //Verify that the login page is displayed
+      .setValue('input[name="username"]', '<test_user_name>') //Enter the test username
+      .setValue('input[name="password"]', '<test_password>') //Enter the test password
+      .click('input[type="submit"]') //Click the submit button
+      .waitForElementVisible('div[class="profile-name"]') //Verify that you have successfully logged in
+      .assert.containsText('div[class="profile-name"]', '<test_user_name>') //Verify that the page displays your profile name
+      .assert.visible('a[href="/financials"]') //Verify that you can access financials
+      .click('a[href="/financials"]') //Click on the financials tab
+      .waitForElementVisible('div[class="financials-data"]') //Verify that the financials information is displayed
+      .click('a[href="/financials/download-data"]') //Verify that the financials information can be downloaded
+      .waitForElementVisible('div[class="logout"]') //Verify that you have successfully logged out
       .end();
   }
 };

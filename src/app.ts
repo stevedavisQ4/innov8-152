@@ -1,7 +1,6 @@
 import express from "express";
-import { Configuration, CreateCompletionResponse, OpenAIApi } from "openai";
+import { CreateCompletionResponse } from "openai";
 import fs from "fs";
-import * as config from "./config";
 import cors from "cors";
 import { ChatGPTService } from "./openai/openai.service";
 
@@ -68,6 +67,7 @@ app.post("/", async (req, res) => {
 
     const response = await createTestCase(fileName, promptExpression);
     
+    console.log(`Finished writing files!`);
     res.status(200).send(response);
   }
   catch(err) {

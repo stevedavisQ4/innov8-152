@@ -12,4 +12,4 @@ A stable internet connection
 Test account credentials
 Steps:
 1. Open the web browser and navigate to the Netflix IR website: https://ir.netflix.net/.
-2. Verify that the website's homepage is displayed with the latest news and events related to Netflix.
+2. Verify that the website's homepage is displayed and you can select the news and events in the navigation bar.
