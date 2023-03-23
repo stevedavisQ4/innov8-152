@@ -10,10 +10,16 @@ export interface PromptProps {
 
 const PromptComponent = (props: PromptProps) => {
   const { onSubmit } = props;
-  const [input, setInput] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [prompt, setPrompt] = useState('');
 
-  const handleChange = (e: any) => {
-    setInput(e.target.value);
+  
+  const handleFileNameChange = (e: any) => {
+    setFileName(e.target.value);
+  }
+
+  const handlePromptChange = (e: any) => {
+    setPrompt(e.target.value);
   }
 
   const handleSubmit = (e: any) => {
@@ -22,7 +28,7 @@ const PromptComponent = (props: PromptProps) => {
   }
 
   const fetchData = async () => {
-    const response = await axios.get<ChatResponse>(`${URL}?prompt=${input}`);
+    const response = await axios.post<ChatResponse>(URL, { fileName, prompt });
     onSubmit(response.data);
   }
 
@@ -30,7 +36,8 @@ const PromptComponent = (props: PromptProps) => {
     <div>
       <h1>Prompt your expression</h1>
       <form onSubmit={handleSubmit}>
-        <textarea id="w3review" name="w3review" rows={4} cols={50} value={input} onChange={handleChange}>
+        <input id="fileName" name="fileName" type="text" value={fileName} onChange={handleFileNameChange}/>
+        <textarea id="promptExpression" name="promptExpression" rows={4} cols={50} value={prompt} onChange={handlePromptChange}>
         </textarea>
         <button type="submit">Submit</button>
       </form>

@@ -13,10 +13,15 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 app.use(cors());
+app.use(express.json());
 
-app.get("/", async (req, res) => {
-  const promptExpression = req.query.prompt as string;
+app.post("/", async (req, res) => {
+  const promptExpression = req.body.prompt as string;
+  const fileName = req.body.fileName as string;
+  
+  console.log(`File name: ${fileName}`)
   console.log(`Prompt expression: ${promptExpression}`)
+
   try {
     const response = await openai.createCompletion({
       model: config.MODEL,
@@ -30,7 +35,14 @@ app.get("/", async (req, res) => {
     });
   
     const time = new Date().getTime();
-    fs.writeFileSync(`tests/${time}.js`, response.data.choices[0].text);
+
+    const dir = `cases/${fileName}`;
+    if(!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+
+    fs.writeFileSync(`${dir}/${fileName}.prompt.txt`, promptExpression);
+    fs.writeFileSync(`${dir}/${fileName}.test.js`, response.data.choices[0].text);
   
     res.status(200).send(response.data);
   } catch(err) {
