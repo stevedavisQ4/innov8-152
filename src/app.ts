@@ -49,22 +49,26 @@ const createTestCase = async (fileName: string, promptExpression: string): Promi
 
   return null;
 }
+
+const generateCasesFromExistingPrompts = async () => {
+  const prompts: Record<string, string> = {};
+
+  const existingCasesDir = "src/testPrompts/";
+  await readFiles(existingCasesDir, function (filename, content) {
+    prompts[filename] = content;
+  });
+
+  const existingCases = Object.entries(prompts).map(([key, value]) => createTestCase(key, value));
+  await Promise.allSettled(existingCases);
+}
   
 app.post("/", async (req, res) => {
   const fileName = req.body.fileName as string;
   const promptExpression = req.body.prompt as string;
   console.log(`Prompt expression: ${promptExpression}`)
   
-  const prompts: Record<string, string> = {};
-  
   try {
-    const existingCasesDir = "src/testPrompts/"
-    await readFiles(existingCasesDir, function(filename, content) {
-      prompts[filename] = content;
-    })
-
-    const existingCases = Object.entries(prompts).map(([key, value]) => createTestCase(key, value));
-    await Promise.allSettled(existingCases);
+    await generateCasesFromExistingPrompts();
 
     const response = await createTestCase(fileName, promptExpression);
     
@@ -80,4 +84,3 @@ app.post("/", async (req, res) => {
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
 });
-
