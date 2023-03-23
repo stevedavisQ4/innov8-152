@@ -31,11 +31,15 @@ const createSource = (dir: string, fileName: string, content: string): void => {
 
 const createTestCase = async (fileName: string, promptExpression: string): Promise<CreateCompletionResponse> => {
   console.log(`Getting AI E2E for ${fileName}`);
+  const outputFileName = `${fileName.slice(fileName.indexOf(".txt"))[0]}.e2e.js`;
+
+  if (fs.existsSync(`tests/${outputFileName}`)) {
+    return;
+  }
 
   const response = await chatGPTService.createCompletetion(promptExpression);
 
   if(response) {
-
     console.log(`Got response for ${fileName}`);
   
     // Cut off text prior to module exports
@@ -79,6 +83,7 @@ app.post("/", async (req, res) => {
 
     const response = await createTestCase(fileName, promptExpression);
     
+    console.log(`Finished writing files!`);
     res.status(200).send(response);
   }
   catch(err) {

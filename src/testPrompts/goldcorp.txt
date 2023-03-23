@@ -3,12 +3,13 @@ You are world-class software engineer.
 Write a test in Nightwatch for the following scenario:
 Test Scenario: Goldcorp IR Website
 
-End to End test case for Facebook preview and public site.
+End to End test case for goldcorp preview site.
+
 Navigate to the url: https://goldcorp2017corp2.s1.web.test.q4inc.com/preview/preview.aspx?
-Enter Username : shilpa
-Enter invalid Password : Q4pass1234
+Enter Username : aiuser	
+Enter invalid Password : Password1
 Click on Login button
-Enter valid password: Q4pass1234!
+Enter valid password: Password1!
 Click on Login button
 Click on Menu link
 Click on Investors link
@@ -19,57 +20,14 @@ Assert only 2020 news releases are displayed.
 click on Download the News Release link
 Assert news release is displayed in the new tab
 Switch the tab to the previous one.
+
+
 Click on Stock information link
 Click on Stock information child link under Investors link
 Assert the Stock Information graph
 click on 1m and assert the graph 
 Click on YTD and assert the graph
 click on Spot Gold/gc_c and assert the graph for both NYSE:NEm and Spot Gold/gc_c
-change the date from jan17, 2023 to Mar 22, 2023 and assert the graph is dispalyed correctly for the selected date range.
+change the date from jan17, 2023 to Mar 22, 2023 and assert the graph is displayed correctly for the selected date range.
 Assert NYSE Stock Quote is displaying all the values in that table
-ASsert TSX Stock Quote is displaying all the values in that table.
-Scroll to NYSE investment Calulator
-Select the start date to Feb 25, 2015 by clicking on Start Date input box and selecting date in the calendar
-Enter the end date as March 23, 2023
-Select S&P 500 and click Chart $10K Invested in NEM button
-Assert the modal is showing the calculations for NYESE:NEM and IND_SPF:SP500
-Click on X button of the modal
-Scroll to NYSE investment Calulator
-Select the start date to April 22, 2020 by clicking on Start Date input box and selecting date in the calendar
-Enter the end date as March 23, 2023
-Select Dow 30 and click Chart $10K Invested in NGT button
-Assert the modal is showing the calculations for TSX:NGT and Dow 30
-Click on X button of the modal
-Assert Analyst Coverage section is displayed.
-Click on View All Analysts button
-Assert modal is displayed with Firm and Analyst list table.
-Close the modal
-Click on Browser back button
-Click on Events & Presentations link under Investors link
-Assert Latest Materials, Past Presentations, Recent Events and Upcoming Event are displayed.
-Click on View All Presentations button.
-Select the year 2022 from the year dropdown
-Assert presentaions and the pdf's are displayed for the year 2022
-click the pdf link and assert pdf links are opened in the new tab.
-Go back to the previous tab 'newmont corporation
-click on Back to Investor Relations link
-Assert upcoming events shows 'There are no events scheduled' alert message when there are no upcoming scheduled events.
-Click on 'View all events' button
-Scroll down to Recent Events section
-Click on the Event Title stating as "Newont fouth quarter results....."
-Assert event details are displayed in the Event Details page with date and time.
-click back button in the browser
-Scroll up and click on Back to Investor Relations link
-Scroll down to SEC Filings section 
-Assert SEC filings title and pdf are displayed.
-click on View All Filings button
-Scroll down to SEC Filings section 
-Assert Table shows the SEC filings for the year 2023 
-Assert the download links are showing the respective icons for PDF, word, xls, zip and html files
-Download all types of files by clicking PDF, word, xls, zip and html files
-Change the select year to 2022 and change the All Form Types to Annual Filings and assert the result page, Quarterly Filings and assert the result page, Current reports and assert the result page.
-Scroll up and assert Financial Summary Table section
-Click on the Q1 of the Press release of year 2022
-Assert Press Release 2022 Q1 report is displayed in the new tab
-Go back to the previous tab
-Verify Annual reports are showing PDf links and they are downloadable.
+Assert TSX Stock Quote is displaying all the values in that table.
