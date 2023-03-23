@@ -1,0 +1,15 @@
+You are world-class software engineer.
+
+Write a test in Nightwatch for the following scenario:
+Test Scenario: Netflix IR Website
+
+Objective: To ensure that the Netflix IR website is working as expected and all its features are functional.
+
+Pre-requisites:
+
+A web browser (e.g., Chrome, Firefox)
+A stable internet connection
+Test account credentials
+Steps:
+1. Open the web browser and navigate to the Netflix IR website: https://ir.netflix.net/.
+2. Verify that the website's homepage is displayed with the latest news and events related to Netflix.
