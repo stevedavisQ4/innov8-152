@@ -1,7 +1,6 @@
 import express from "express";
-import { Configuration, CreateCompletionResponse, OpenAIApi } from "openai";
+import { CreateCompletionResponse } from "openai";
 import fs from "fs";
-import * as config from "./config";
 import cors from "cors";
 import { ChatGPTService } from "./openai/openai.service";
 
@@ -22,6 +21,14 @@ const readFiles = async (dirname, onFileContent) => {
   }
 }
 
+const createSource = (dir: string, fileName: string, content: string): void => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  fs.writeFileSync(`${dir}/${fileName}`, content);
+}
+
 const createTestCase = async (fileName: string, promptExpression: string): Promise<CreateCompletionResponse> => {
   console.log(`Getting AI E2E for ${fileName}`);
 
@@ -35,13 +42,13 @@ const createTestCase = async (fileName: string, promptExpression: string): Promi
     const aiText = response.choices[0].text;
     const testCode = aiText.slice(aiText.indexOf("module.exports"));
   
-    const dir = `cases/${fileName}`;
+    const dir = `tests/${fileName}`;
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
   
-    fs.writeFileSync(`${dir}/${fileName}.prompt.txt`, promptExpression);
-    fs.writeFileSync(`${dir}/${fileName}.e2e.js`, testCode);
+    createSource("prompts", `${fileName}.prompt.txt`, promptExpression);
+    createSource("tests", `${fileName}.e2e.js`, testCode);
   
     console.log(`Finished writing for ${dir}`);
     return response;

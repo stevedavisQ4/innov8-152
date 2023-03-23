@@ -8,4 +8,6 @@
 
 config.js
 
-cases/
+prompts/
+
+tests/
