@@ -2,9 +2,10 @@ import express from "express";
 import { Configuration, OpenAIApi } from "openai";
 import fs from "fs";
 import * as config from "./config";
+import cors from "cors";
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 const configuration = new Configuration({
   apiKey: config.API_KEY,
@@ -20,35 +21,47 @@ async function readFiles(dirname, onFileContent) {
   }
 }
 
+app.use(cors());
+  
 app.get("/", async (req, res) => {
+  const promptExpression = req.query.prompt as string;
+  console.log(`Prompt expression: ${promptExpression}`)
+  
   const prompts: Record<string, string> = {};
   
-  await readFiles('src/testPrompts/', function(filename, content) {
-    prompts[filename] = content;
-  })
+  try {
+    await readFiles('src/testPrompts/', function(filename, content) {
+      prompts[filename] = content;
+    })
 
-  for await ( const [key, value] of Object.entries(prompts)) {
-    console.log(`Getting AI E2E for ${key}`);
+    for await ( const [key, value] of Object.entries(prompts)) {
+      console.log(`Getting AI E2E for ${key}`);
 
-    const response = await openai.createCompletion({
-      model: config.MODEL,
-      prompt: value,
-      temperature: 0.7,
-      max_tokens: 3500,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-    });
+      const response = await openai.createCompletion({
+        model: config.MODEL,
+        prompt: value,
+        temperature: 0.7,
+        max_tokens: 3500,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      });
 
-    console.log(`Got response for ${key}`);
+      console.log(`Got response for ${key}`);
 
-    const outputFileName = `tests/${key.split(".txt")[0]}.e2e.js`;
+      const outputFileName = `tests/${key.split(".txt")[0]}.e2e.js`;
 
-    // Cut off text prior to module exports
-    const aiText = response.data.choices[0].text;
-    const testCode = aiText.slice(aiText.indexOf("module.exports"));
-    fs.writeFileSync(outputFileName, testCode);
-    console.log(`Finished writing for ${outputFileName}`);
+      // Cut off text prior to module exports
+      const aiText = response.data.choices[0].text;
+      const testCode = aiText.slice(aiText.indexOf("module.exports"));
+      fs.writeFileSync(outputFileName, testCode);
+      console.log(`Finished writing for ${outputFileName}`);
+    }
+  }
+  catch(err) {
+    console.error(err);
+    res.status(400).send({ err });
+    return;
   }
 
   res.status(200).send("Finished writing files!");
