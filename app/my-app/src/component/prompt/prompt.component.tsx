@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import { ChatResponse } from '../../model/Response';
 import axios from 'axios';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 const URL = "http://localhost:4000"
 
@@ -34,12 +36,35 @@ const PromptComponent = (props: PromptProps) => {
 
   return (
     <div>
-      <h1>Prompt your expression</h1>
       <form onSubmit={handleSubmit}>
-        <input id="fileName" name="fileName" type="text" value={fileName} onChange={handleFileNameChange}/>
-        <textarea id="promptExpression" name="promptExpression" rows={4} cols={50} value={prompt} onChange={handlePromptChange}>
-        </textarea>
-        <button type="submit">Submit</button>
+        <TextField
+          style={{ display: "grid", marginTop: '20px' }}
+          id="fileName"
+          name="fileName"
+          label="File name"
+          type="text"
+          placeholder='Type your E2E test file name'
+          value={fileName}
+          onChange={handleFileNameChange}
+        />
+        <TextField
+          style={{ display: "grid", marginTop: '20px' }}
+          id="promptExpression"
+          name="promptExpression"
+          label="Expression"
+          placeholder="Type you test case expression"
+          minRows={4}
+          multiline
+          value={prompt}
+          onChange={handlePromptChange}
+        />
+        <Button
+          style={{ marginTop: '12px' }}
+          variant="outlined"
+          type="submit"
+        >
+          Submit
+        </Button>
       </form>
     </div>
   );
