@@ -21,7 +21,10 @@ app.get('/', async (req, res) => {
     });
 
     console.log(response);
-    res.send("hello world");
+
+    res.status(200).send({
+        bot: response.data.choices[0].text
+    });    
 });
 
 app.listen(port, () => {
