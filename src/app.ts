@@ -1,11 +1,12 @@
 import express from "express";
 import { Configuration, OpenAIApi } from "openai";
+import fs from "fs";
 
 const app = express();
 const port = 3000;
 
 const configuration = new Configuration({
-  apiKey: "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",
+  apiKey: "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",
 });
 const openai = new OpenAIApi(configuration);
 
@@ -21,7 +22,8 @@ app.get("/", async (req, res) => {
     presence_penalty: 0,
   });
 
-  console.log(response);
+  const time = new Date().getTime();
+  fs.writeFileSync(`tests/${time}.js`, response.data.choices[0].text);
 
   res.status(200).send({
     bot: response.data.choices[0].text,
