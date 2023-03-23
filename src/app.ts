@@ -1,5 +1,5 @@
 import express from "express";
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, CreateCompletionResponse, OpenAIApi } from "openai";
 import fs from "fs";
 import * as config from "./config";
 import cors from "cors";
@@ -24,7 +24,7 @@ const readFiles = async (dirname, onFileContent) => {
   }
 }
 
-const createTestCase = async (fileName: string, promptExpression: string) => {
+const createTestCase = async (fileName: string, promptExpression: string): Promise<CreateCompletionResponse> => {
   console.log(`Getting AI E2E for ${fileName}`);
 
   const response = await openai.createCompletion({
@@ -52,6 +52,8 @@ const createTestCase = async (fileName: string, promptExpression: string) => {
   fs.writeFileSync(`${dir}/${fileName}.e2e.js`, testCode);
 
   console.log(`Finished writing for ${dir}`);
+
+  return response.data;
 }
   
 app.post("/", async (req, res) => {
@@ -71,15 +73,15 @@ app.post("/", async (req, res) => {
       await createTestCase(key, value);
     }
 
-    await createTestCase(fileName, promptExpression);
+    const response = await createTestCase(fileName, promptExpression);
+    
+    res.status(200).send(response);
   }
   catch(err) {
     console.error(err);
     res.status(400).send({ err });
     return;
   }
-
-  res.status(200).send("Finished writing files!");
 });
 
 app.listen(port, () => {
