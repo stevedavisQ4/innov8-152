@@ -3,3 +3,7 @@
 /tests_output
 
 /dist
+
+.env
+
+config.js
