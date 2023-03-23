@@ -3,6 +3,7 @@ import { Configuration, CreateCompletionResponse, OpenAIApi } from "openai";
 import fs from "fs";
 import * as config from "./config";
 import cors from "cors";
+import { ChatGPTService } from "./openai/openai.service";
 
 const app = express();
 const port = 4000;
@@ -10,10 +11,7 @@ const port = 4000;
 app.use(cors());
 app.use(express.json());
 
-const configuration = new Configuration({
-  apiKey: config.API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+const chatGPTService = new ChatGPTService();
 
 const readFiles = async (dirname, onFileContent) => {
   const filenames = await fs.promises.readdir(dirname);
@@ -27,33 +25,29 @@ const readFiles = async (dirname, onFileContent) => {
 const createTestCase = async (fileName: string, promptExpression: string): Promise<CreateCompletionResponse> => {
   console.log(`Getting AI E2E for ${fileName}`);
 
-  const response = await openai.createCompletion({
-    model: config.MODEL,
-    prompt: promptExpression,
-    temperature: 0.7,
-    max_tokens: 3500,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-  });
+  const response = await chatGPTService.createCompletetion(promptExpression);
 
-  console.log(`Got response for ${fileName}`);
+  if(response) {
 
-  // Cut off text prior to module exports
-  const aiText = response.data.choices[0].text;
-  const testCode = aiText.slice(aiText.indexOf("module.exports"));
-
-  const dir = `cases/${fileName}`;
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+    console.log(`Got response for ${fileName}`);
+  
+    // Cut off text prior to module exports
+    const aiText = response.choices[0].text;
+    const testCode = aiText.slice(aiText.indexOf("module.exports"));
+  
+    const dir = `cases/${fileName}`;
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  
+    fs.writeFileSync(`${dir}/${fileName}.prompt.txt`, promptExpression);
+    fs.writeFileSync(`${dir}/${fileName}.e2e.js`, testCode);
+  
+    console.log(`Finished writing for ${dir}`);
+    return response;
   }
 
-  fs.writeFileSync(`${dir}/${fileName}.prompt.txt`, promptExpression);
-  fs.writeFileSync(`${dir}/${fileName}.e2e.js`, testCode);
-
-  console.log(`Finished writing for ${dir}`);
-
-  return response.data;
+  return null;
 }
   
 app.post("/", async (req, res) => {
@@ -69,9 +63,8 @@ app.post("/", async (req, res) => {
       prompts[filename] = content;
     })
 
-    for await ( const [key, value] of Object.entries(prompts)) {
-      await createTestCase(key, value);
-    }
+    const existingCases = Object.entries(prompts).map(([key, value]) => createTestCase(key, value));
+    await Promise.allSettled(existingCases);
 
     const response = await createTestCase(fileName, promptExpression);
     
