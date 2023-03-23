@@ -1,5 +1,5 @@
-import express from 'express';
-import { Configuration, OpenAIApi } from 'openai';
+import express from "express";
+import { Configuration, OpenAIApi } from "openai";
 
 const app = express();
 const port = 3000;
