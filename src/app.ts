@@ -27,6 +27,8 @@ const createSource = (dir: string, fileName: string, content: string): void => {
   }
 
   fs.writeFileSync(`${dir}/${fileName}`, content);
+
+  console.log(`Finished writing for ${dir}`);
 }
 
 const createTestCase = async (fileName: string, promptExpression: string): Promise<CreateCompletionResponse> => {
@@ -46,15 +48,9 @@ const createTestCase = async (fileName: string, promptExpression: string): Promi
     const aiText = response.choices[0].text;
     const testCode = aiText.slice(aiText.indexOf("module.exports"));
   
-    const dir = `tests/${fileName}`;
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-  
     createSource("prompts", `${fileName}.prompt.txt`, promptExpression);
     createSource("tests", `${fileName}.e2e.js`, testCode);
-  
-    console.log(`Finished writing for ${dir}`);
+
     return response;
   }
 
