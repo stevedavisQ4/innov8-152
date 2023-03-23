@@ -1,3 +1,3 @@
 export interface ChatResponse {
-    choices: {text: string}[];
+    text: string;
 }

@@ -1,94 +1,33 @@
 import express from "express";
-import { CreateCompletionResponse } from "openai";
-import fs from "fs";
+import { Configuration } from "openai";
+import * as config from "./config";
 import cors from "cors";
-import { ChatGPTService } from "./openai/openai.service";
+import { OpenAIIntegration, OpenAIService } from "./infrastructure/integration/openai/openai.service";
+import { ChatGPTService, ChatGTPExecutor } from "./domain/chatGPT/chatGPT.service";
+import { ChatGPTController } from "./domain/chatGPT/chatGPT.controller";
 
-const app = express();
-const port = 4000;
+const configuration = new Configuration({
+    apiKey: config.API_KEY,
+});
 
-app.use(cors());
-app.use(express.json());
-
-const chatGPTService = new ChatGPTService();
-
-const readFiles = async (dirname, onFileContent) => {
-  const filenames = await fs.promises.readdir(dirname);
-
-  for await (const filename of filenames) {
-    const content = await fs.promises.readFile(dirname + filename, 'utf-8')
-    onFileContent(filename, content);
-  }
-}
-
-const createSource = (dir: string, fileName: string, content: string): void => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-
-  fs.writeFileSync(`${dir}/${fileName}`, content);
-
-  console.log(`Finished writing for ${dir}`);
-}
-
-const createTestCase = async (fileName: string, promptExpression: string): Promise<CreateCompletionResponse> => {
-  console.log(`Getting AI E2E for ${fileName}`);
-  const outputFileName = `${fileName.slice(fileName.indexOf(".txt"))[0]}.e2e.js`;
-
-  if (fs.existsSync(`tests/${outputFileName}`)) {
-    return;
-  }
-
-  const response = await chatGPTService.createCompletetion(promptExpression);
-
-  if(response) {
-    console.log(`Got response for ${fileName}`);
+const setup = (): void => {
+  const openAIService: OpenAIService = new OpenAIIntegration(configuration);
+  const chatGPTService: ChatGPTService = new ChatGTPExecutor(openAIService);
+  const chatGPTController = new ChatGPTController(chatGPTService)
   
-    // Cut off text prior to module exports
-    const aiText = response.choices[0].text;
-    const testCode = aiText.slice(aiText.indexOf("module.exports"));
+  const app = express();
+  const port = 4000;
   
-    createSource("prompts", `${fileName}.prompt.txt`, promptExpression);
-    createSource("tests", `${fileName}.e2e.js`, testCode);
-
-    return response;
-  }
-
-  return null;
-}
-
-const generateCasesFromExistingPrompts = async () => {
-  const prompts: Record<string, string> = {};
-
-  const existingCasesDir = "src/testPrompts/";
-  await readFiles(existingCasesDir, function (filename, content) {
-    prompts[filename] = content;
-  });
-
-  const existingCases = Object.entries(prompts).map(([key, value]) => createTestCase(key, value));
-  await Promise.allSettled(existingCases);
-}
-  
-app.post("/", async (req, res) => {
-  const fileName = req.body.fileName as string;
-  const promptExpression = req.body.prompt as string;
-  console.log(`Prompt expression: ${promptExpression}`)
-  
-  try {
-    await generateCasesFromExistingPrompts();
-
-    const response = await createTestCase(fileName, promptExpression);
+  app.use(cors());
+  app.use(express.json());
     
-    console.log(`Finished writing files!`);
-    res.status(200).send(response);
-  }
-  catch(err) {
-    console.error(err);
-    res.status(400).send({ err });
-    return;
-  }
-});
+  app.post("/", (req, res) => chatGPTController.createTestCase(req, res));
+  app.patch("/", (req, res) => chatGPTController.createTestCaseFromScript(req, res));
+  
+  app.listen(port, () => {
+    return console.log(`Express is listening at http://localhost:${port}`);
+  });
+}
 
-app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
-});
+
+setup();

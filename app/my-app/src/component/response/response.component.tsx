@@ -6,12 +6,10 @@ export interface ResponseProps {
 }
 
 const ResponseComponent = (props: ResponseProps): JSX.Element => {
-
+  const { response } = props;
   return (
     <div>
-        {props.response?.choices?.map((choice): JSX.Element => (
-            <div>{choice.text}</div>
-        ))}
+      <div>{response?.text}</div>
     </div>
   );
 }

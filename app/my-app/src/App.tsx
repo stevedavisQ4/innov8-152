@@ -11,6 +11,7 @@ function App() {
   const handleSubmitResponse = useCallback((response: ChatResponse) => {
     setResponse(response);
   }, [setResponse]);
+
   return (
     <div>
       <PromptComponent onSubmit={handleSubmitResponse}/>
