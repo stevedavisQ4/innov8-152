@@ -23,11 +23,15 @@ const readFiles = async (dirname, onFileContent) => {
 
 const createTestCase = async (fileName: string, promptExpression: string): Promise<CreateCompletionResponse> => {
   console.log(`Getting AI E2E for ${fileName}`);
+  const outputFileName = `${fileName.slice(fileName.indexOf(".txt"))[0]}.e2e.js`;
+
+  if (fs.existsSync(`tests/${outputFileName}`)) {
+    return;
+  }
 
   const response = await chatGPTService.createCompletetion(promptExpression);
 
   if(response) {
-
     console.log(`Got response for ${fileName}`);
   
     // Cut off text prior to module exports
@@ -40,7 +44,7 @@ const createTestCase = async (fileName: string, promptExpression: string): Promi
     }
   
     fs.writeFileSync(`${dir}/${fileName}.prompt.txt`, promptExpression);
-    fs.writeFileSync(`${dir}/${fileName}.e2e.js`, testCode);
+    fs.writeFileSync(`${dir}/${outputFileName}.e2e.js`, testCode);
   
     console.log(`Finished writing for ${dir}`);
     return response;
