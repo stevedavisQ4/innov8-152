@@ -16,9 +16,9 @@ export class ChatGTPExecutor {
   ): Promise<string> {
     try {
       const preAmble =
-        "You are a great QA engineer.  Write a jestNightwatch end to end test.\n\n";
+        "You are a great QA engineer.  Write a module.exports nightwatch end to end test.\n\n";
       const postAmble =
-        "\n\nWrite the above end to end scenario in jestNightwatch.";
+        "\n\nWrite the above end to end scenario in nightwatch.";
 
       console.log(`[ChatGTPExecutor] Getting AI E2E for ${fileName}`);
       const response = await this.openAIService.query(

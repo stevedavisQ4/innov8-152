@@ -17,7 +17,7 @@ export class OpenAIIntegration implements OpenAIService {
       const response = await this.openai.createCompletion({
         model: config.MODEL,
         prompt: expression,
-        temperature: 0.7,
+        temperature: 0,
         max_tokens: 2200,
         top_p: 1,
         frequency_penalty: 0,
