@@ -8,10 +8,11 @@ const URL = "http://localhost:4000"
 
 export interface PromptProps {
   onSubmit: (response: ChatResponse) => void;
+  onRequest: () => void;
 }
 
 const PromptComponent = (props: PromptProps) => {
-  const { onSubmit } = props;
+  const { onSubmit, onRequest } = props;
   const [fileName, setFileName] = useState('');
   const [prompt, setPrompt] = useState('');
 
@@ -30,6 +31,7 @@ const PromptComponent = (props: PromptProps) => {
   }
 
   const fetchData = async () => {
+    onRequest();
     const response = await axios.post<ChatResponse>(URL, { fileName, prompt });
     onSubmit(response.data);
   }
