@@ -17,6 +17,8 @@ const PromptComponent = (props: PromptProps): JSX.Element => {
   const [fileName, setFileName] = useState("");
   const [prompt, setPrompt] = useState("");
 
+  const [loading, setLoading] = useState(isLoading);
+
   const handleFileNameChange = (e: any) => {
     setFileName(e.target.value);
   };
@@ -42,15 +44,40 @@ const PromptComponent = (props: PromptProps): JSX.Element => {
   };
 
   const getTest = async () => {
+    setLoading(true);
     await axios
       .post(URL + "/nightwatch", { fileName })
       .then((response) => {
-        console.log(response);
+        spawnDocument(response.data, {});
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
+
+  // @ts-ignore
+  function spawnDocument(content, options) {
+    let opt = {
+      window: "",
+      closeChild: true,
+      childId: "_blank",
+    };
+    Object.assign(opt, options);
+    // minimal error checking
+    if (
+      content &&
+      typeof content.toString == "function" &&
+      content.toString().length
+    ) {
+      let child = window.open("", opt.childId, opt.window) as Window;
+      child.document.write(content.toString());
+      if (opt.closeChild) child.document.close();
+      return child;
+    }
+  }
 
   return (
     <div>
@@ -63,7 +90,7 @@ const PromptComponent = (props: PromptProps): JSX.Element => {
         placeholder="Type your E2E test file name"
         value={fileName}
         onChange={handleFileNameChange}
-        disabled={isLoading}
+        disabled={loading}
       />
       <TextField
         style={{ display: "grid", marginTop: "20px" }}
@@ -75,7 +102,7 @@ const PromptComponent = (props: PromptProps): JSX.Element => {
         multiline
         value={prompt}
         onChange={handlePromptChange}
-        disabled={isLoading}
+        disabled={loading}
       />
       <Button
         style={{ marginTop: "12px" }}

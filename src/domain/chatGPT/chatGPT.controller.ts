@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ChatGPTService } from "./chatGPT.service";
 import { exec } from "child_process";
+import path from "path";
 export class ChatGPTController {
   public constructor(private chatGPTService: ChatGPTService) {}
 
@@ -40,11 +41,28 @@ export class ChatGPTController {
   }
 
   public async nightwatch(req: Request, res: Response): Promise<void> {
+    console.log("DIRNAME", __dirname);
+    console.log(
+      "PATH",
+      path.resolve(
+        __dirname + "/../../../tests_output/nightwatch-html-report/index.html"
+      )
+    );
     try {
       const fileName = req.body.fileName as string;
       const command = `npm run test --test tests\\${fileName}.e2e.js`;
       console.log("Command: " + command);
-      exec(command);
+      var child = exec(command);
+      child.stdout.pipe(process.stdout);
+      child.on("exit", function () {
+        console.log("EXITED");
+        res.sendFile(
+          path.resolve(
+            __dirname +
+              "/../../../tests_output/nightwatch-html-report/index.html"
+          )
+        );
+      });
     } catch (err) {
       console.log(err);
     }
