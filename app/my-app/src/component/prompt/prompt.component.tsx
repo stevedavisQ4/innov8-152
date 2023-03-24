@@ -30,47 +30,72 @@ const PromptComponent = (props: PromptProps): JSX.Element => {
     fetchData();
   };
 
+  const handleTest = (e: any) => {
+    e.preventDefault();
+    getTest();
+  };
+
   const fetchData = async () => {
     onRequest();
     const response = await axios.post<ChatResponse>(URL, { fileName, prompt });
     onSubmit(response.data);
   };
 
+  const getTest = async () => {
+    await axios
+      .post(URL + "/nightwatch", { fileName })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          style={{ display: "grid", marginTop: "20px" }}
-          id="fileName"
-          name="fileName"
-          label="File name"
-          type="text"
-          placeholder="Type your E2E test file name"
-          value={fileName}
-          onChange={handleFileNameChange}
-          disabled={isLoading}
-        />
-        <TextField
-          style={{ display: "grid", marginTop: "20px" }}
-          id="promptExpression"
-          name="promptExpression"
-          label="Expression"
-          placeholder="Type you test case expression"
-          minRows={4}
-          multiline
-          value={prompt}
-          onChange={handlePromptChange}
-          disabled={isLoading}
-        />
-        <Button
-          style={{ marginTop: "12px" }}
-          variant="outlined"
-          type="submit"
-          disabled={isLoading}
-        >
-          Submit
-        </Button>
-      </form>
+      <TextField
+        style={{ display: "grid", marginTop: "20px" }}
+        id="fileName"
+        name="fileName"
+        label="File name"
+        type="text"
+        placeholder="Type your E2E test file name"
+        value={fileName}
+        onChange={handleFileNameChange}
+        disabled={isLoading}
+      />
+      <TextField
+        style={{ display: "grid", marginTop: "20px" }}
+        id="promptExpression"
+        name="promptExpression"
+        label="Expression"
+        placeholder="Type you test case expression"
+        minRows={4}
+        multiline
+        value={prompt}
+        onChange={handlePromptChange}
+        disabled={isLoading}
+      />
+      <Button
+        style={{ marginTop: "12px" }}
+        variant="outlined"
+        type="submit"
+        disabled={isLoading}
+        onClick={handleSubmit}
+      >
+        Submit
+      </Button>
+
+      <Button
+        style={{ marginTop: "12px", marginLeft: "20px" }}
+        variant="outlined"
+        type="submit"
+        disabled={!fileName}
+        onClick={handleTest}
+      >
+        Test
+      </Button>
     </div>
   );
 };
