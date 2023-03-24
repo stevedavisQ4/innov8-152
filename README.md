@@ -1,7 +1,7 @@
 # innov8-152
 
 This repo has two projects, one is the server-side application and the another one is the client-side.
-The project aims to integrate with ChatGPT to generate and build E2E test files E2E using Nightwatch to execute the tests.
+The project aims to integrate with ChatGPT to generate and build E2E test files using Nightwatch to execute the tests.
 
 ### 1. Structure
 
@@ -25,7 +25,7 @@ There is a GUI, which is the react APP, that provides a way to send to ChatGPT t
 
 When the user submits the request to the application server it's gonna integrate with ChatGPT to retrieve the code result to be able to generate the test file and include that in the `tests` folder.
 
-Once the request is completed done, the GUI has also the ability to render the result of the test file generated as an output.
+Once the request is completely done, the GUI has also the ability to render the result of the test file generated as an output.
 
 <img src="/assets/interface-sample.png" alt="GUI" />
 
@@ -34,7 +34,7 @@ Once the request is completed done, the GUI has also the ability to render the r
 The server application provides two endpoints
 
 - `(POST) <protocol>://<base_url>/` - Create a test case sending the request to ChatGPT and also storing the prompt and test files
-- `(PATCH) <protocol>://<base_url>/` - Create a test cases according to expressions stored in `src/scripts`
+- `(PATCH) <protocol>://<base_url>/` - Create a test cases according to expressions file stored in `src/scripts`
 
 ### 4. How to run?
 
