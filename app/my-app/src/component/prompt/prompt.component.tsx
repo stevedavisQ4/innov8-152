@@ -103,7 +103,7 @@ const PromptComponent = (props: PromptProps): JSX.Element => {
         name="promptExpression"
         label="Expression"
         placeholder="Type you test case expression"
-        minRows={4}
+        minRows={8}
         multiline
         value={prompt}
         onChange={handlePromptChange}

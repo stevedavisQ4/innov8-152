@@ -42,7 +42,7 @@ function App() {
             />
           </Grid>
           <Grid item xs={6}>
-            <ResponseComponent response={response} />
+            {!!response && <ResponseComponent response={response} />}
           </Grid>
         </Grid>
       </Box>
