@@ -27,7 +27,8 @@ When the user submits the request to the application server it's gonna integrate
 
 Once the request is completed done, the GUI has also the ability to render the result of the test file generated as an output.
 
-(assets/interface-sample.png)
+()
+<img src="/assets/interface-sample.png" alt="GUI" />
 
 ### 3. Endpoints
 
