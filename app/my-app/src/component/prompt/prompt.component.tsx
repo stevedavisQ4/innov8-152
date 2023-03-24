@@ -29,6 +29,7 @@ const PromptComponent = (props: PromptProps): JSX.Element => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    setLoading(true);
     fetchData();
   };
 
@@ -39,7 +40,11 @@ const PromptComponent = (props: PromptProps): JSX.Element => {
 
   const fetchData = async () => {
     onRequest();
-    const response = await axios.post<ChatResponse>(URL, { fileName, prompt });
+    const response = await axios
+      .post<ChatResponse>(URL, { fileName, prompt })
+      .finally(() => {
+        setLoading(false);
+      });
     onSubmit(response.data);
   };
 
@@ -108,7 +113,7 @@ const PromptComponent = (props: PromptProps): JSX.Element => {
         style={{ marginTop: "12px" }}
         variant="outlined"
         type="submit"
-        disabled={isLoading}
+        disabled={loading}
         onClick={handleSubmit}
       >
         Submit
@@ -118,7 +123,7 @@ const PromptComponent = (props: PromptProps): JSX.Element => {
         style={{ marginTop: "12px", marginLeft: "20px" }}
         variant="outlined"
         type="submit"
-        disabled={!fileName}
+        disabled={!fileName || loading}
         onClick={handleTest}
       >
         Test
