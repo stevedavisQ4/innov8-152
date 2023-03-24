@@ -14,4 +14,7 @@
     border-top: 10px solid #383636; /* Black */
     border-radius: 50%;
     animation: spinner 1.5s linear infinite;
+    position: absolute;
+    left: calc(50% - 25px);
+    top: calc(50% - 25px);
 }

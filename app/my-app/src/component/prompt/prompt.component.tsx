@@ -9,10 +9,11 @@ const URL = "http://localhost:4000"
 export interface PromptProps {
   onSubmit: (response: ChatResponse) => void;
   onRequest: () => void;
+  isLoading: boolean;
 }
 
 const PromptComponent = (props: PromptProps) => {
-  const { onSubmit, onRequest } = props;
+  const { onSubmit, onRequest, isLoading } = props;
   const [fileName, setFileName] = useState('');
   const [prompt, setPrompt] = useState('');
 
@@ -48,6 +49,7 @@ const PromptComponent = (props: PromptProps) => {
           placeholder='Type your E2E test file name'
           value={fileName}
           onChange={handleFileNameChange}
+          disabled={isLoading}
         />
         <TextField
           style={{ display: "grid", marginTop: '20px' }}
@@ -59,11 +61,13 @@ const PromptComponent = (props: PromptProps) => {
           multiline
           value={prompt}
           onChange={handlePromptChange}
+          disabled={isLoading}
         />
         <Button
           style={{ marginTop: '12px' }}
           variant="outlined"
           type="submit"
+          disabled={isLoading}
         >
           Submit
         </Button>

@@ -23,23 +23,21 @@ function App() {
 
   return (
     <Container maxWidth="xl">
-      { 
-        isLoading ? 
-          <LoadingSpinner /> :
-          <Box sx={{ width: '100%' }}>
-            <Typography variant="h4" gutterBottom style={{ textAlign: "center" }}>
-              Prompt your E2E test case
-            </Typography>
-            <Grid container spacing={6}>
-              <Grid item xs={6}>
-                <PromptComponent onRequest={handleRequestStarting} onSubmit={handleSubmitResponse}/>
-              </Grid>
-              <Grid item xs={6}>
-                <ResponseComponent response={response}/>
-              </Grid>
+      {isLoading && <LoadingSpinner />}
+        <Box sx={{ width: '100%' }} className={"Root-Container"}>
+          <Typography variant="h4" gutterBottom style={{ textAlign: "center" }}>
+            Prompt your E2E test case
+          </Typography>
+          <Grid container spacing={6}>
+            <Grid item xs={6}>
+              <PromptComponent onRequest={handleRequestStarting} onSubmit={handleSubmitResponse} isLoading={isLoading}/>
             </Grid>
-          </Box>
-      }
+            <Grid item xs={6}>
+              <ResponseComponent response={response}/>
+            </Grid>
+          </Grid>
+        </Box>
+
     </Container>
   );
 }
