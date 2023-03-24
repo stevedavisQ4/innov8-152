@@ -1,7 +1,7 @@
 # innov8-152
 
 `The project aims to integrate with ChatGPT to generate and build E2E test files using Nightwatch to execute the tests.`><br/>
-This repo has two projects, one is the **server-side application** and the another one is the **client-side**.
+This repo has two projects, one is the **server-side application** (root level) and the another one is the **client-side** (app/my-app).
 
 ### 1. Structure
 
@@ -10,22 +10,24 @@ This repo has two projects, one is the **server-side application** and the anoth
 - `app/my-app` - It's the directory for the client-side application which is developed using React.
 - `src` - Server-side code built using NodeJS and ExpressJS
 
-#### 1.2. Dinamically generated
+#### 1.2. Dynamically generated files and folders
 
-The folders below are generated dinamically according to the usage of the application:
+The folders below are generated dynamically according to the usage of the application:
 
-- `prompts` - It's the folder that contains all the test cases stories that will be used to be sent out to ChatGPT to generate the test files.
+- `prompts` - It's the folder that contains all the test cases scenarios that will be sent to ChatGPT to generate the test code files.
   - `*.txt` - All files are generated with a file name ending with the extension `.txt`
 - `tests` - It's the folder that will contain all E2E test files generated according to the prompt file used.
-  - `*.e2e.js` - All files are generated with a file name ending with the extension `.e2e.js` and with the same file name used and stored in the **prompts** directory.
+  - `*.e2e.js` - All files are generated with a file name ending with the extension `.e2e.js` and with the same file name prefix used and stored in the **prompts** directory.
 
 ### 2. Interface
 
-There is a GUI, which is the react APP, that provides a way to send to ChatGPT the file name (that is used to generate the files on `prompts` and `tests` folders) and an expression (that is stored in the `prompts` folder according to the file name defined)
+There is a GUI, which is the react APP, that provides a way to send to ChatGPT the file name (that is used to generate the files on `prompts` and `tests` folders) and an expression (that is stored in the `prompts` folder according to the file name defined).
 
-When the user submits the request to the application server it's gonna integrate with ChatGPT to retrieve the code result to be able to generate the test file and include that in the `tests` folder.
+When the user submits the request to the application server it will integrate with ChatGPT to retrieve the test code result. It will then generate the test file and include that in the `tests` folder.
 
-Once the request is completely done, the GUI has also the ability to render the result of the test file generated as an output.
+Once the request is completely done, the GUI also has the ability to render the result of the test file generated as an output.
+
+There is an option to test the expression once submitted. It will start a chrome instance and run through the expression and show the results if the generated test code is working as expected.
 
 <img src="/assets/interface-sample.png" alt="GUI" />
 
@@ -33,8 +35,8 @@ Once the request is completely done, the GUI has also the ability to render the 
 
 The server application provides two endpoints
 
-- `(POST) <protocol>://<base_url>/` - Create a test case sending the request to ChatGPT and also storing the prompt and test files
-- `(PATCH) <protocol>://<base_url>/` - Create a test cases according to expressions file stored in `src/scripts`
+- `(POST) <protocol>://<base_url>/` - Create a test code file sending the test case scenario in the request to ChatGPT and also storing the prompt and test files
+- `(PATCH) <protocol>://<base_url>/` - Create a test code file according to expression files stored in `src/scripts`
 
 ### 4. How to run?
 
