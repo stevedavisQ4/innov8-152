@@ -1,6 +1,6 @@
 # innov8-152
 
-`The project aims to integrate with ChatGPT to generate and build E2E test files using Nightwatch to execute the tests.`><br/>
+`The project aims to integrate with ChatGPT to generate and build E2E test files using Nightwatch to execute the tests.`<br/>
 This repo has two projects, one is the **server-side application** (root level) and the another one is the **client-side** (app/my-app).
 
 ### 1. Structure
