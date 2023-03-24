@@ -12,7 +12,8 @@ export interface ResponseProps {
 const ResponseComponent = (props: ResponseProps): JSX.Element => {
   const { response } = props;
   return (
-    <Box sx={{ width: '100%', minHeight: 220, p: 2, border: '1px solid rgba(0, 0, 0, 0.3)', borderRadius: '4px', marginTop: '20px' }}>
+    <Box sx={{ width: '100%', minHeight: 168, p: 2, border: '1px solid rgba(0, 0, 0, 0.3)', borderRadius: '4px', marginTop: '20px' }}>
+      <Typography variant="h6" gutterBottom align='center'>Test case</Typography>
       <Typography variant="body1" gutterBottom>
         <SyntaxHighlighter language="javascript" style={docco}>
           {response?.text as string}

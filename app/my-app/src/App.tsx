@@ -22,7 +22,7 @@ function App() {
   const handleRequestStarting = useCallback(() => setIsLoading(true), [setIsLoading])
 
   return (
-    <Container>
+    <Container maxWidth="xl">
       { 
         isLoading ? 
           <LoadingSpinner /> :
